@@ -1,0 +1,12 @@
+{
+  "name": "three-tier-app-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "description": "AWS Lambda backend: REST API (API Gateway v2) + Neon Postgres + Better Auth",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test"
+  }
+}

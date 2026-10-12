@@ -54,3 +54,24 @@ output "lambda_execution_policy_arn" {
   description = "Managed execution policy matching PRD 6.2 exactly."
   value       = aws_iam_policy.lambda_execution.arn
 }
+
+# --- Lambda (Step 5) --------------------------------------------------------
+output "lambda_function_name" {
+  description = "Deployed API Lambda function name."
+  value       = module.api_lambda.lambda_function_name
+}
+
+output "lambda_function_arn" {
+  description = "Deployed API Lambda function ARN."
+  value       = module.api_lambda.lambda_function_arn
+}
+
+output "lambda_security_group_id" {
+  description = "Security group attached to the Lambda ENIs."
+  value       = aws_security_group.lambda.id
+}
+
+output "lambda_env_kms_key_arn" {
+  description = "CMK used to encrypt Lambda environment variables."
+  value       = aws_kms_key.lambda_env.arn
+}
