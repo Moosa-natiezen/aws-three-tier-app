@@ -1,8 +1,11 @@
 /**
  * Backend entrypoint — invoked via API Gateway (HTTP API, payload v2.0).
- * Business logic (Neon CRUD + Better Auth session validation) lands in
- * Step 7-9; this version establishes the routing/response contract.
+ * Routing:
+ *   /auth/*  -> Better Auth (sign-in, sessions; bearer token support)
+ *   /health  -> liveness probe
+ *   CRUD     -> wired in Step 9 (Neon app data, auth-guarded)
  */
+import { handleAuthEvent } from "./auth-handler.js";
 
 const CORS_HEADERS = {
   "content-type": "application/json",
@@ -33,6 +36,11 @@ export async function handler(event) {
       env: process.env.APP_ENV ?? "unknown",
       time: new Date().toISOString(),
     });
+  }
+
+  // Better Auth routes (Step 7): sign-in, sign-up, sessions, etc.
+  if (path.startsWith("/auth/")) {
+    return handleAuthEvent(event);
   }
 
   // Placeholder — replaced by auth-guarded CRUD handlers in Step 9
