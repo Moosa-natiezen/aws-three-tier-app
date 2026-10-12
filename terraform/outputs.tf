@@ -75,3 +75,24 @@ output "lambda_env_kms_key_arn" {
   description = "CMK used to encrypt Lambda environment variables."
   value       = aws_kms_key.lambda_env.arn
 }
+
+# --- API Gateway (Step 6) ---------------------------------------------------
+output "api_id" {
+  description = "HTTP API (v2) ID."
+  value       = module.apigw.api_id
+}
+
+output "api_endpoint" {
+  description = "Default execute-api endpoint (no custom domain yet)."
+  value       = module.apigw.api_endpoint
+}
+
+output "api_stage_invoke_url" {
+  description = "Stage invoke URL — base URL the SPA calls (/{stage}/...)."
+  value       = module.apigw.stage_invoke_url
+}
+
+output "apigw_access_log_group_name" {
+  description = "CloudWatch log group receiving API Gateway stage access logs."
+  value       = aws_cloudwatch_log_group.apigw.name
+}
