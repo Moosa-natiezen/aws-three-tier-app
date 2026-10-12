@@ -38,3 +38,19 @@ output "availability_zones" {
   description = "AZs the environment spans (multi-AZ per PRD 5.2)."
   value       = module.vpc.azs
 }
+
+# --- IAM (Step 4) -----------------------------------------------------------
+output "lambda_role_name" {
+  description = "IAM role assumed by all backend Lambda functions."
+  value       = aws_iam_role.lambda.name
+}
+
+output "lambda_role_arn" {
+  description = "ARN of the Lambda execution role (with cross-env boundary attached)."
+  value       = aws_iam_role.lambda.arn
+}
+
+output "lambda_execution_policy_arn" {
+  description = "Managed execution policy matching PRD 6.2 exactly."
+  value       = aws_iam_policy.lambda_execution.arn
+}
