@@ -11,24 +11,14 @@
 import { betterAuth } from "better-auth/minimal";
 import { bearer } from "better-auth/plugins";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
-import { Pool } from "pg";
-import { drizzle } from "drizzle-orm/node-postgres";
+import { createDb } from "./db.js";
 import * as schema from "./schema/auth.js";
 
 // Cache per connection string so tests can exercise multiple envs.
 const cache = new Map();
 
 function buildAuth(env) {
-  const pool = new Pool({
-    connectionString: env.NEON_DATABASE_URL,
-    max: 5, // per-container cap; Neon pooler multiplexes across Lambdas
-    idleTimeoutMillis: 30_000,
-    connectionTimeoutMillis: 10_000,
-    // Neon terminates TLS; CA is not bundled in the pg client image.
-    ssl: { rejectUnauthorized: false },
-  });
-
-  const db = drizzle(pool, { schema });
+  const db = createDb(env);
 
   return betterAuth({
     baseURL: env.BETTER_AUTH_URL || "http://localhost",

@@ -9,7 +9,10 @@
   "description": "AWS Lambda backend: REST API (API Gateway v2) + Neon Postgres + Better Auth",
   "main": "index.js",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push"
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "^1.7.7",
@@ -17,5 +20,8 @@
     "better-auth": "^1.7.7",
     "drizzle-orm": "^0.45.4",
     "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.11"
   }
 }
