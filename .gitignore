@@ -38,3 +38,6 @@ Thumbs.db
 
 # TypeScript incremental build cache
 *.tsbuildinfo
+
+# terraform-aws-modules/lambda build cache
+terraform/builds/
