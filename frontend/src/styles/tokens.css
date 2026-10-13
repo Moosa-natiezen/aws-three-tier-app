@@ -1,0 +1,16 @@
+/* UI/UX §1.1 — dark-mode-by-default palette ("Shakuro" aesthetic) */
+:root {
+  --bg: #09090b; /* Deep Onyx — main canvas */
+  --surface: #18181b; /* Charcoal — cards, modals, elevated containers */
+  --border: #27272a; /* Subtle Zinc — dividers, component boundaries */
+  --text: #fafafa; /* Off-White — primary text */
+  --text-muted: #a1a1aa; /* Cool Grey — metadata, placeholders */
+  --accent: #4f46e5; /* Electric Indigo — CTAs, active states, focus */
+  --success: #10b981; /* Emerald — successful mutations */
+  --error: #ef4444; /* Rose — destructive actions, validation errors */
+
+  /* UI/UX §1.2 typography */
+  --font-display: "Geist", system-ui, sans-serif;
+  --font-ui: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
