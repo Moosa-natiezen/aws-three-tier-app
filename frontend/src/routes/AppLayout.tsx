@@ -1,6 +1,63 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { authClient, signOut } from "../lib/auth";
 
 /** UI/UX §2 — fixed left sidebar; user profile anchor lands here (Step 11). */
+function ProfileAnchor() {
+  const navigate = useNavigate();
+  const { data } = authClient.useSession();
+  const user = data?.user;
+
+  return (
+    <div style={{ borderTop: "1px solid var(--border)", paddingTop: 12 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div
+          style={{
+            width: 32,
+            height: 32,
+            borderRadius: 999,
+            background: "var(--accent)",
+            display: "grid",
+            placeItems: "center",
+            fontWeight: 600,
+            fontSize: 13,
+            flexShrink: 0,
+          }}
+        >
+          {(user?.name ?? "?").slice(0, 1).toUpperCase()}
+        </div>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ fontSize: 13, fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {user?.name ?? "Unknown"}
+          </div>
+          <div style={{ fontSize: 11, color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {user?.email ?? ""}
+          </div>
+        </div>
+      </div>
+      <button
+        onClick={async () => {
+          await signOut();
+          navigate("/login", { replace: true });
+        }}
+        style={{
+          width: "100%",
+          marginTop: 10,
+          background: "transparent",
+          border: "1px solid var(--border)",
+          borderRadius: 8,
+          padding: "7px 10px",
+          color: "var(--text-muted)",
+          cursor: "pointer",
+          fontSize: 12,
+          fontWeight: 500,
+        }}
+      >
+        Sign out
+      </button>
+    </div>
+  );
+}
+
 export function AppLayout() {
   return (
     <div style={{ display: "flex", height: "100%" }}>
@@ -40,17 +97,7 @@ export function AppLayout() {
           Dashboard
         </NavLink>
         <div style={{ flex: 1 }} />
-        {/* UI/UX §2: user profile anchor + logout (Step 11) */}
-        <div
-          style={{
-            borderTop: "1px solid var(--border)",
-            paddingTop: 12,
-            color: "var(--text-muted)",
-            fontSize: 12,
-          }}
-        >
-          Not signed in
-        </div>
+        <ProfileAnchor />
       </aside>
       <main style={{ flex: 1, overflow: "auto", padding: 24 }}>
         <Outlet />
