@@ -7,6 +7,19 @@
  */
 import { createAuth } from "./auth.js";
 
+/**
+ * HTTP APIs invoked through a named stage (dev/prod) include the stage as
+ * the first path segment (/dev/auth/...). Routes and Better Auth's basePath
+ * are stage-less, so strip it before matching.
+ */
+export function normalizePath(event) {
+  const raw = event.rawPath ?? "/";
+  const stage = event.requestContext?.stage;
+  if (stage && raw.startsWith(`/${stage}/`)) return raw.slice(stage.length + 1);
+  if (stage && raw === `/${stage}`) return "/";
+  return raw;
+}
+
 export function eventToRequest(event) {
   const method = (event.requestContext?.http?.method ?? "GET").toUpperCase();
   const proto =
@@ -16,7 +29,7 @@ export function eventToRequest(event) {
   const rawQuery = event.rawQueryString
     ? `?${event.rawQueryString}`
     : "";
-  const request = new Request(`${proto}://${host}${event.rawPath ?? "/"}${rawQuery}`, {
+  const request = new Request(`${proto}://${host}${normalizePath(event)}${rawQuery}`, {
     method,
     headers: buildHeaders(event),
     body: buildBody(event, method),
@@ -24,7 +37,7 @@ export function eventToRequest(event) {
   return request;
 }
 
-function buildHeaders(event) {
+export function buildHeaders(event) {
   const headers = new Headers();
   for (const [name, value] of Object.entries(event.headers ?? {})) {
     if (value != null && name.toLowerCase() !== "cookie") {

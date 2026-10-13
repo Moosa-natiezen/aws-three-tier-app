@@ -60,6 +60,13 @@ module "apigw" {
 
   # PRD §4.2: GET / POST / PUT / DELETE → stateless Lambda (proxy v2.0)
   routes = {
+    # Better Auth surface (basePath /auth): sign-in, sign-up, sessions...
+    "ANY /auth/{proxy+}" = {
+      integration = {
+        lambda_arn             = module.api_lambda.lambda_function_arn
+        payload_format_version = "2.0"
+      }
+    }
     "GET /health" = {
       integration = {
         lambda_arn             = module.api_lambda.lambda_function_arn

@@ -5,7 +5,8 @@
  *   /health  -> liveness probe
  *   CRUD     -> wired in Step 9 (Neon app data, auth-guarded)
  */
-import { handleAuthEvent } from "./auth-handler.js";
+import { handleAuthEvent, normalizePath } from "./auth-handler.js";
+import { handleItems } from "./crud.js";
 
 const CORS_HEADERS = {
   "content-type": "application/json",
@@ -21,9 +22,9 @@ const respond = (statusCode, body) => ({
 });
 
 export async function handler(event) {
-  const { routeKey, rawPath } = event.requestContext ?? {};
   const method = event.requestContext?.http?.method ?? "GET";
-  const path = rawPath ?? routeKey?.split(" ")[1] ?? "/";
+  // Stage-aware: /dev/items -> /items (HTTP APIs include the stage prefix)
+  const path = normalizePath(event);
 
   // CORS preflight (HTTP API passes OPTIONS through when configured)
   if (method === "OPTIONS") {
@@ -43,7 +44,11 @@ export async function handler(event) {
     return handleAuthEvent(event);
   }
 
-  // Placeholder — replaced by auth-guarded CRUD handlers in Step 9
+  // Neon-backed CRUD, auth-guarded (Step 9): /items, /items/{id}
+  if (path === "/items" || path.startsWith("/items/")) {
+    return handleItems(event);
+  }
+
   return respond(501, {
     message: "Not implemented yet",
     hint: `No handler for ${method} ${path} (build step pending)`,
