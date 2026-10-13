@@ -96,3 +96,24 @@ output "apigw_access_log_group_name" {
   description = "CloudWatch log group receiving API Gateway stage access logs."
   value       = aws_cloudwatch_log_group.apigw.name
 }
+
+# --- Frontend hosting (Step 12) ---------------------------------------------
+output "frontend_bucket_name" {
+  description = "Private S3 bucket holding the SPA build (OAC-only access)."
+  value       = module.frontend_bucket.s3_bucket_id
+}
+
+output "cloudfront_distribution_id" {
+  description = "Distribution ID — used by scripts/deploy.sh for invalidations."
+  value       = aws_cloudfront_distribution.frontend.id
+}
+
+output "cloudfront_domain_name" {
+  description = "Public HTTPS URL of the SPA."
+  value       = aws_cloudfront_distribution.frontend.domain_name
+}
+
+output "frontend_url" {
+  description = "Full https:// URL for the deployed frontend."
+  value       = "https://${aws_cloudfront_distribution.frontend.domain_name}"
+}
